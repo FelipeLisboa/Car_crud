@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Car_crud.app.entity.Car;
+import com.Car_crud.app.entity.Model;
 import com.Car_crud.app.services.CarService;
 import java.util.List;
 @RestController
@@ -74,18 +75,18 @@ public class CarController {
 //		return ResponseEntity.ok(oCar);
 //	}
 //	
-//	//read by model
-//	@GetMapping("getmodel/{model}")
-//	public ResponseEntity<?> readByModel (@PathVariable String model){
-//		List<Car> oCar = carService.findByModel(model);
-//				
-//		if(oCar.isEmpty()) {
-//			//404 si no lo encuentra
-//			return ResponseEntity.notFound().build();
-//		}
-//		//200 todo ok
-//		return ResponseEntity.ok(oCar);
-//	}
+	//read by model
+	@GetMapping("getmodel/{model}")
+	public ResponseEntity<?> readByModel (@PathVariable Model model){
+		List<Car> oCar = carService.findByModel(model);
+				
+		if(oCar.isEmpty()) {
+			//404 si no lo encuentra
+			return ResponseEntity.notFound().build();
+		}
+		//200 todo ok
+		return ResponseEntity.ok(oCar);
+	}
 
 	//read by color
 	@GetMapping("getcolor/{color}")
@@ -137,23 +138,23 @@ public class CarController {
 		return cars;//devuelve la lista completa
 	}
 	
-//	//update putmapping("/{id}")
-//	@PutMapping("/{id}")
-//	public ResponseEntity<?> update (@RequestBody Car carDetails, @PathVariable Long id){
-//		Optional<Car> oCar = carService.findById(id);
-//		
-//		if(!oCar.isPresent()) {
-//			return ResponseEntity.notFound().build();
-//		}
-//		oCar.get().setRegistration(carDetails.getRegistration());
-//		oCar.get().setBrand(carDetails.getBrand());
-//		oCar.get().setModel(carDetails.getModel());
-//		oCar.get().setColor(carDetails.getColor());
-//		oCar.get().setYear(carDetails.getYear());
-//		oCar.get().setEnabled(carDetails.getEnabled());
-//		
-//		return ResponseEntity.status(HttpStatus.CREATED).body(carService.save(oCar.get()));		
-//	}
+	//update putmapping("/{id}")
+	@PutMapping("/{id}")
+	public ResponseEntity<?> update (@RequestBody Car carDetails, @PathVariable Long id){
+		Optional<Car> oCar = carService.findById(id);
+		
+		if(!oCar.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		oCar.get().setRegistration(carDetails.getRegistration().toUpperCase());
+		oCar.get().setModel(carDetails.getModel());
+		oCar.get().setColor(carDetails.getColor().toUpperCase());
+		oCar.get().setYear(carDetails.getYear());
+		oCar.get().setEnabled(carDetails.isEnabled());
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(carService.save(oCar.get()));		
+	}
 	
 	//delete deletemapping("/{id}")
 	@DeleteMapping("/{id}")
